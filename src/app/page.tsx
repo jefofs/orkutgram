@@ -30,9 +30,9 @@ const userMock = [
 
 export default function Home(){
     const [users, setUsers] = useState(userMock);
-    const [dialogOpen, setDialogOpen] = useState(false);
     const [name, setName] = useState("");
-    const [email, setEmail] = useState(""); 
+    const [email, setEmail] = useState("");
+    const [dialogOpen, setDialogOpen] = useState(false);
     
     function addUser(){
         const newUser = {
@@ -40,7 +40,14 @@ export default function Home(){
             name,
             email,
         }
-        setUsers((currentUsers) => [...currentUsers, newUser,])
+        setUsers((currentUsers) => [...currentUsers, newUser,]);
+        clearFields();
+        setDialogOpen(false);
+    }
+
+    function clearFields(){
+        setName("");
+        setEmail("");
     }
     
     return(
@@ -52,36 +59,44 @@ export default function Home(){
                         Gerencie os usuários cadastrados
                     </p>
                 </div>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button className="cursor-pointer" onClick={() => setDialogOpen(true)}>
-                            Adicionar usuário
-                        </Button>
+                <Dialog
+                    open={dialogOpen}
+                    onOpenChange={(open) => {
+                        setDialogOpen(open);
+                        if(!open){
+                            clearFields();
+                        }
+                    }}
+                >
+                    <DialogTrigger render={<Button className="cursor-pointer"/>}> 
+                        Adicionar usuário
                     </DialogTrigger>
 
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Adicionar usuário</DialogTitle>
+                            <DialogTitle>Informações do usuário</DialogTitle>
                         </DialogHeader>
                         <div>
-                            <Label>Nome</Label>
-                            <Input
-                                id="name"
-                                value={name}
-                                onChange={(event) => setName(event.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <Label>Email</Label>
-                            <Input
-                                id="email"
-                                value={email}
-                                onChange={(event) => setEmail(event.target.value)}    
+                            <div>
+                                <Label>Nome</Label>
+                                <Input
+                                    id="name"
+                                    value={name}
+                                    onChange={(event) => setName(event.target.value)}
                                 />
+                            </div>
+                            <div>
+                                <Label>Email</Label>
+                                <Input
+                                    id="email"
+                                    value={email}
+                                    onChange={(event) => setEmail(event.target.value)}    
+                                    />
+                            </div>
+                            <Button className="cursor-pointer" onClick={addUser}>
+                                Adicionar
+                            </Button>
                         </div>
-                        <Button className="cursor-pointer" onClick={addUser}>
-                            Adicionar
-                        </Button>
                     </DialogContent>
                 </Dialog>
             </div>
